@@ -126,6 +126,8 @@ def read_meas(i2cbus, pni3100_object):
         # If we're in single measurement mode and we just read the measurement, clear the single measurement bit
         if single_meas_x:
             pni3100_object.poll_byte &= ~pni3100_object.PollRegister.POLL_PMX
+    else:
+        x_mag_value = None
 
     # Read from Y Magnetometer
     if pni3100_object.cmy or single_meas_y:
@@ -141,6 +143,8 @@ def read_meas(i2cbus, pni3100_object):
         # If we're in single measurement mode and we just read the measurement, clear the single measurement bit
         if single_meas_y:
             pni3100_object.poll_byte &= ~pni3100_object.PollRegister.POLL_PMY
+    else:
+        y_mag_value = None
 
     # Read from Z magnetometer
     if pni3100_object.cmz or single_meas_z:
@@ -156,12 +160,21 @@ def read_meas(i2cbus, pni3100_object):
         # If we're in single measurement mode and we just read the measurement, clear the single measurement bit
         if single_meas_z:
             pni3100_object.poll_byte &= ~pni3100_object.PollRegister.POLL_PMZ
+    else:
+        z_mag_value = None
+
+    # Print the Measurements
+    if pni3100_object.print_status_statements:
+        print("xMag: {:+.4f}uT \tyMag: {:+.4f}uT \tzMag {:+.4f}uT".format(x_mag_value, y_mag_value, z_mag_value))
+
 
     if pni3100_object.print_debug_statements:
         print("Read Meas")
         print("\tX bytes: [{}]".format(', '.join(hex(val) for val in x_mag_bytes)), "\tX Int Unsigned: ", hex(x_mag_unsigned), ", ", x_mag_unsigned, "\tX Int: ", x_mag_int, "\tX Value: ", x_mag_value)
         print("\tY Bytes: [{}]".format(', '.join(hex(val) for val in y_mag_bytes)), "\tY Int Unsigned: ", hex(y_mag_unsigned), ", ", y_mag_unsigned, "\tY Int: ", y_mag_int, "\tX Value: ", y_mag_value)
         print("\tZ Bytes: [{}]".format(', '.join(hex(val) for val in z_mag_bytes)), "\tZ Int Unsigned: ", hex(z_mag_unsigned), ", ", z_mag_unsigned, "\tZ Int: ", z_mag_int, "\tX Value: ", z_mag_value)
+
+    return x_mag_value, y_mag_value, z_mag_value
 
 
 """
@@ -212,33 +225,34 @@ def read_revid(i2cbus, pni3100_object):
     revid_value = i2cbus.read_byte_data(pni3100_object.device_addr, pni3100_object.RevidRegister.REVID_REGISTER_ADDR)
     return revid_value
 
+
 """
-init_rm3100
+Writes the configuration parameters of a 'pni_rm3100' object to the 'i2cbus'
+    Inputs:
+        i2cbus         - object of class 'SMBus' that has been set to a specific I2C line
+        pni3100_object - object of class 'pni_rm3100'
+                        This function assumes 'pni3100_object.default_config()' has been run
+                        and the member variables in the pni3100_object have been modified to
+                        the user's desired values.
 """
-def init_rm3100(i2cbus, pni3100_object):
+def write_config(i2cbus, pni3100_object):
     # write to bist register
     write_bist(i2cbus, pni3100_object)
-    bist_val = read_bist(i2cbus, pni3100_object)
 
     # write to poll register
     write_poll(i2cbus, pni3100_object)
-    poll_val = read_poll(i2cbus, pni3100_object)
 
     # write to ccr register
     write_ccr(i2cbus, pni3100_object)
-    read_ccr(i2cbus, pni3100_object)
 
     # write to tmrc register
     write_tmrc(i2cbus, pni3100_object)
-    tmrc_val = read_tmrc(i2cbus, pni3100_object)
 
     # write to hshake register
     write_hshake(i2cbus, pni3100_object)
-    hshake_val = read_hshake(i2cbus, pni3100_object)
     
     # This will start Continuous Measurement Mode if CMM_START bit is set
     write_cmm(i2cbus, pni3100_object)
-    cmm_val = read_cmm(i2cbus, pni3100_object)
 
 """
 self_test
@@ -285,73 +299,3 @@ def self_test(i2cbus, pni3100_object, attempt_num=10):
             print("Z Magnetometer is NOT OK")
 
     return bist_value
-
-
-"""
-Writes the configuration parameters of a 'pni_rm3100' object to the 'i2cbus'
-    Inputs:
-        i2cbus         - object of class 'SMBus' that has been set to a specific I2C line
-        pni3100_object - object of class 'pni_rm3100'
-                        This function assumes 'pni3100_object.default_config()' has been run
-                        and the member variables in the pni3100_object have been modified to
-                        the user's desired values.
-"""
-def write_config(i2cbus, pni3100_object):
-    blah = 0
-
-
-# Defining main function
-def main():
-    # Instantiate Objects
-    pni_object = pni_rm3100.PniRm3100()
-    i2cbus = smbus2.SMBus(1) # Opens /dev/i2c-1
-
-    # Select PNI Object Settings
-    pni_object.print_debug_statements = True
-    pni_object.print_status_statements = True
-
-    # Assign PNI Device Address
-    pni_object.assign_device_addr(pni_object.DeviceAddress.I2C_ADDR_HH)
-
-    # Assign CCR Values
-    # pni_object.assign_xyz_ccr(pni_object.CcrRegister.CCR_DEFAULT + 0x0002, pni_object.CcrRegister.CCR_DEFAULT + 0x0004, pni_object.CcrRegister.CCR_DEFAULT + 0x0006)
-
-    print("About to read from CCR registers")
-    # write_ccr(i2cbus, pni_object)
-    read_ccr(i2cbus, pni_object)
-    # print("Just read from CCR registers")
-
-    print("Gain :", 1.0/pni_object.x_scaling, "\tScaling: ", pni_object.x_scaling)
-
-    init_rm3100(i2cbus, pni_object)
-
-    while 1:
-        read_meas(i2cbus, pni_object)
-        time.sleep(1)
-
-def execute_self_test():
-    # Instantiate Objects
-    pni_object = pni_rm3100.PniRm3100()
-    i2cbus = smbus2.SMBus(1) # Opens /dev/i2c-1
-
-    # Select PNI Object Settings
-    pni_object.print_status_statements = True
-
-    # Set PNI Device Address
-    pni_object.assign_device_addr(pni_object.DeviceAddress.I2C_ADDR_HH)
-
-    # Select which Axes we'd like to test during the Built-In Self Test (BIST)
-    pni_object.assign_poll_byte(poll_x = True, poll_y = True, poll_z = True)
-
-    # Select the Timeout and LRP for the BIST. Then Enable Self-Test mode
-    pni_object.assign_bist_timeout(pni_object.BistRegister.BIST_TO_120us)
-    pni_object.assign_bist_lrp(pni_object.BistRegister.BIST_LRP_4)
-    pni_object.assign_bist_ste(True)
-
-    # Run the Self Test
-    self_test(i2cbus, pni_object)
-  
-# Using the special variable 
-if __name__=="__main__":
-    main()
-    # execute_self_test()

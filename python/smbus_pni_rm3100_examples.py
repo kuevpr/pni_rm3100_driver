@@ -41,13 +41,13 @@ execute_continuous_measurements
     The "write" and "read" functions from "smbus_pni_rm3100" are communicating with the sensor over I2C. 
     These functions take in a "pni_object" that has been configued to the user's preferences
 """
-def execute_continuous_measurements(num_measurements = 20):
+def execute_continuous_measurements(num_measurements = 20, dt_seconds = 0.2):
     # Instantiate Objects
     pni_object = pni_rm3100.PniRm3100()
     i2cbus = smbus2.SMBus(1) # Opens /dev/i2c-1
 
     # Select PNI Object Settings
-    # Set this to False (the default) if you don't want print statements in the terminal
+    # Set this to False (the default) if you don't want the "read" functions printing data in the terminal
     pni_object.print_status_statements = True
 
     # Assign PNI Device Address
@@ -73,7 +73,7 @@ def execute_continuous_measurements(num_measurements = 20):
     # Here's an example of how to write to and read from a register. 
     # You can adjust the CCR values in the 'assign_xyz_ccr' function call above and ensure these are
     # Being written to the registers correctly
-    # Note: 'smbus_pni_rm3100.init_rm3100' will write to the CCR address for you.
+    # Note: 'smbus_pni_rm3100.write_config' will write to the CCR address for you.
     print("About to write to and read from CCR Registers")
     smbus_pni_rm3100.write_ccr(i2cbus, pni_object)
     read_x_ccr, read_y_ccr, read_z_ccr = smbus_pni_rm3100.read_ccr(i2cbus, pni_object)
@@ -83,7 +83,7 @@ def execute_continuous_measurements(num_measurements = 20):
     print("Gain :", 1.0/pni_object.x_scaling, "\tScaling: ", pni_object.x_scaling)
 
     # Take the settings we've assigned and write them their respective registers on the Magnetometer 
-    # Note: 'init_rm3100()' will call the following functions and write values
+    # Note: 'write_config()' will call the following functions and write values
     # to various registers on the RM3100
     #   write_bist   (bist register)
     #   write_poll   (poll register)
@@ -91,14 +91,34 @@ def execute_continuous_measurements(num_measurements = 20):
     #   write_tmrc   (tmrc register)
     #   write_hshake (hshake register)
     #   write_cmm    (cmm register)
-    smbus_pni_rm3100.init_rm3100(i2cbus, pni_object)
+    smbus_pni_rm3100.write_config(i2cbus, pni_object)
 
     # Now that we've enables CMM (Continous Measurement Mode), let's read some magnetometer values!
     i = 0
+    x_mag_sum = y_mag_sum = z_mag_sum = 0
     while i < num_measurements:
-        smbus_pni_rm3100.read_meas(i2cbus, pni_object)
-        time.sleep(1)
+        # Print progress
+        if i % 10 == 0:
+            print("\nIteration {}/{}".format(i, num_measurements))
 
+        #Read magnetic field data
+        x_mag, y_mag, z_mag = smbus_pni_rm3100.read_meas(i2cbus, pni_object)
+
+        # Update our summations
+        x_mag_sum += x_mag
+        y_mag_sum += y_mag
+        z_mag_sum += z_mag
+
+        # Sleep and incremenet iterator
+        time.sleep(dt_seconds)
+        i += 1
+
+    # Take average of measurements and print
+    x_mag_avg = x_mag_sum / num_measurements
+    y_mag_avg = y_mag_sum / num_measurements
+    z_mag_avg = z_mag_sum / num_measurements
+    print("\nAverage magnetic field values over {} iterations are \n\txMag_avg: {:+.4f}uT \tyMag_avg: {:+.4f}uT \tzMag_avg {:+.4f}uT"\
+          .format(num_measurements, x_mag_avg, y_mag_avg, z_mag_avg))
 
 # This is the code that will execute when you type "python3 smbus_pni_rm3100_examples" in the terminal
 # Please only um-comment one of these at a time.
