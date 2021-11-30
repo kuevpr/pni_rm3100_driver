@@ -194,6 +194,13 @@ class PniRm3100:
     ##################################################
 
     """
+    __init__() "Constructor"
+    """
+    def __init__(self):
+        self.default_config()
+        self.data = []
+
+    """
     __cycle_count_to_scaling "Cycle Count to Gain (uT/LSB)
     Table 3.1 (pg. 5 of datasheet) Gives the gain/scaling for three Cycle Count values
     The following link on the PNI Help Center confirms the relationship between Cycle Count and gain is linear
@@ -203,15 +210,6 @@ class PniRm3100:
         gain = (150.0 / 400.0) * cycle_count    # [LSB / uT]
         scaling = 1.0 / gain                    # [uT / LSB]
         return scaling  
-
-
-    """
-    __init__() "Constructor"
-    """
-    def __init__(self):
-        self.default_config()
-        self.data = []
-
 
     """
     default_config() "Default Configuration"
