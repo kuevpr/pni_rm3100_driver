@@ -671,3 +671,37 @@ class PniRm3100:
                        ((input_int32 >> 24) & 0x000000FF)
 
         return output_int32
+
+    ##################################
+    # SMBus Methods
+    ##################################
+    """
+    Writes CCR(Cycle Count Register) values assigned to parameters in 'pni3100_object'
+    This function assumes 'pni3100_object.default_config()' has been run
+    and the member variables in the pni3100_object have been modified to
+    the user's desired values.
+    """
+    def write_ccr(self):
+        # Raspberry Pi is Little Endian while the RM3100 is Big Endian 
+        # Thus, any integer that is Two or more Bytes needs to have 
+        # its endianness (order of its bytes) reversed before sending over I2C
+
+        # CCRX
+        send_x_ccr = self.endian_swap_int16(self.x_ccr)
+        x = self._i2c_bus.write_word_data(self.device_addr, 
+                                          self.CcrRegister.CCR_REGISTER_ADDR, 
+                                          send_x_ccr)
+
+        # CCRY
+        send_y_ccr = self.endian_swap_int16(self.y_ccr)
+        y = self._i2c_bus.write_word_data(self.device_addr, 
+                                          self.CcrRegister.CCR_REGISTER_ADDR + 0x02, 
+                                          send_y_ccr)
+
+        # CCRZ
+        send_z_ccr = self.endian_swap_int16(self.z_ccr)
+        z = self._i2c_bus.write_word_data(self.device_addr, 
+                                          self.CcrRegister.CCR_REGISTER_ADDR + 0x04, 
+                                          send_z_ccr)
+        
+        return x, y, z
