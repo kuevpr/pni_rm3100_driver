@@ -1,3 +1,4 @@
+import time
 from enum import IntEnum
 import smbus2 as smbus
 
@@ -676,10 +677,12 @@ class PniRm3100:
     # SMBus Methods
     ##################################
     """
-    Writes CCR(Cycle Count Register) values assigned to parameters in 'pni3100_object'
-    This function assumes 'pni3100_object.default_config()' has been run
-    and the member variables in the pni3100_object have been modified to
-    the user's desired values.
+    write_ccr() 
+    
+    Writes CCR(Cycle Count Register) values assigned to parameters in self
+    
+    This function assumes member variables in the pni3100_object have been 
+    modified to the user's desired values.
     """
     def write_ccr(self):
         # Raspberry Pi is Little Endian while the RM3100 is Big Endian 
@@ -705,3 +708,27 @@ class PniRm3100:
                                           send_z_ccr)
         
         return x, y, z
+    
+    #TODO: chance i2cbus and pni_obj to self._i2c_bus and self
+    """
+    read_ccr()
+    
+    Reads CCR(Cycle Count Register) values from the three CCR registers on the device
+    """
+    def read_ccr(i2cbus, pni3100_object):
+        # CCRX
+        read_x_ccr = i2cbus.read_word_data(pni3100_object.device_addr, 
+                                           pni3100_object.CcrRegister.CCR_REGISTER_ADDR)
+
+        # CCRY
+        read_y_ccr = i2cbus.read_word_data(pni3100_object.device_addr,
+                                           pni3100_object.CcrRegister.CCR_REGISTER_ADDR + 0x02)
+
+        # CCRZ
+        read_z_ccr = i2cbus.read_word_data(pni3100_object.device_addr, 
+                                           pni3100_object.CcrRegister.CCR_REGISTER_ADDR + 0x04)
+
+        if pni3100_object.print_status_statements:
+            print("read_ccr: (x: ", hex(read_x_ccr), ", y: ", hex(read_y_ccr), ", z: ", hex(read_z_ccr), ")")
+
+        return read_x_ccr, read_y_ccr, read_z_ccr
