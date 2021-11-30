@@ -1,7 +1,7 @@
 import pni_rm3100
 import time
 import smbus_pni_rm3100
-import smbus2
+import smbus2 as smbus
 
 """
 execute_self_test
@@ -11,7 +11,7 @@ execute_self_test
 def execute_self_test():
     # Instantiate Objects
     pni_object = pni_rm3100.PniRm3100()
-    i2cbus = smbus2.SMBus(1) # Opens /dev/i2c-1
+    i2cbus = smbus.SMBus(1) # Opens /dev/i2c-1
 
     # Select PNI Object Settings
     pni_object.print_status_statements = True
@@ -44,7 +44,7 @@ execute_continuous_measurements
 def execute_continuous_measurements(num_measurements = 20, dt_seconds = 0.2):
     # Instantiate Objects
     pni_object = pni_rm3100.PniRm3100()
-    i2cbus = smbus2.SMBus(1) # Opens /dev/i2c-1
+    i2cbus = smbus.SMBus(1) # Opens /dev/i2c-1
 
     # Select PNI Object Settings
     # Set this to False (the default) if you don't want the "read" functions printing data in the terminal

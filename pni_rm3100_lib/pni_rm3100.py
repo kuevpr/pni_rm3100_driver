@@ -1,4 +1,6 @@
 from enum import IntEnum
+import smbus2 as smbus
+
 # from types import NoneType
 class PniRm3100:
     """ Class for reading from PNI RM3100 Magnetometer"""
@@ -27,16 +29,19 @@ class PniRm3100:
     print_debug_statements = False  
 
     # Intended to print register values when calling "read_" functions form I2C-side library
-    print_status_statements = False 
+    print_status_statements = False
+
+    # I2C Bus (SMBus)
+    _i2c_bus = None 
 
     ##################################################
     ##########       MEMBER CLASSES         ##########
     ##################################################
     class DeviceAddress(IntEnum):
-        I2C_ADDR_LL = 0x20 #SA1(SSN) pulled LOW,  SA0(MISO) pulled LOW
-        I2C_ADDR_LH = 0x21 #SA1(SSN) pulled LOW,  SA0(MISO) pulled HIGH
-        I2C_ADDR_HL = 0x22 #SA1(SSN) pulled HIGH, SA0(MISO) pulled LOW
-        I2C_ADDR_HH = 0x23 #SA1(SSN) pulled HIGH, SA0(MISO) pulled HIGH
+        I2C_ADDR_LL = 0x20 #SA0(MISO) pulled LOW, SA1(SSN) pulled LOW
+        I2C_ADDR_HL = 0x21 #SA0(MISO) pulled LOW,  SA1(SSN) pulled HIGH
+        I2C_ADDR_LH = 0x22 #SA0(MISO) pulled HIGH, SA1(SSN) pulled LOW
+        I2C_ADDR_HH = 0x23 #SA0(MISO) pulled HIGH, SA1(SSN) pulled HIGH
 
     """
     CCR (Cycle Count Register) - pg28 of datasheet
@@ -217,6 +222,9 @@ class PniRm3100:
     default_config() "Default Configuration"
     """
     def default_config(self):
+        #I2C Bus Setup --> defaults to Raspberry Pi default I2C bus number
+        self._i2c_bus = smbus.SMBus(1)
+
         # Device Address
         self.device_addr = self.DeviceAddress.I2C_ADDR_LL
 
@@ -260,28 +268,37 @@ class PniRm3100:
         self.hshake_byte = drc1_bit | drc0_bit
 
     """
+    change_i2c_bus() 
+        Input: 
+            bus - bus (int or str) – i2c bus number (e.g. 0 or 1) or an absolute file path (e.g. ‘/dev/i2c-42’).
+            force - boolean
+        Effects:
+            self._i2c_bus
+    """
+    def change_i2c_bus(self, bus=None, force=None):
+        self._i2c_bus = smbus.SMBus(bus, force)
+    
+    """
     assign_device_addr() "Assign Device Address"
         Input: 
             input_addr - One of the four possible device addresses for the PNI RM3100. 
                          Can be passed as enum (e.g. self.DeviceAddress.I2C_ADDR_HH) or Hex value (e.g. 0x23)
+                         'H' and 'L' are in SA0 and SA1 order (the actual hardware pins)
         Effects:
             self.device_addr
     """
-    # TODO: Check if IntEnum objects equal their assigned value all the time. 
-    # If so, you can remove the 'or' statement here for brevity
     def assign_device_addr(self, input_addr):
         if (input_addr == self.DeviceAddress.I2C_ADDR_LL) or (input_addr == 0x20):
             self.device_addr = self.DeviceAddress.I2C_ADDR_LL
-        elif (input_addr == self.DeviceAddress.I2C_ADDR_LH) or (input_addr == 0x21):
-            self.device_addr = self.DeviceAddress.I2C_ADDR_LH
-        elif (input_addr == self.DeviceAddress.I2C_ADDR_HL) or (input_addr == 0x22):
+        elif (input_addr == self.DeviceAddress.I2C_ADDR_HL) or (input_addr == 0x21):
             self.device_addr = self.DeviceAddress.I2C_ADDR_HL
+        elif (input_addr == self.DeviceAddress.I2C_ADDR_LH) or (input_addr == 0x22):
+            self.device_addr = self.DeviceAddress.I2C_ADDR_LH
         elif (input_addr == self.DeviceAddress.I2C_ADDR_HH) or (input_addr == 0x23):
             self.device_addr = self.DeviceAddress.I2C_ADDR_HH
         else:
             if self.print_status_statements:
                 print("ERROR in 'assign_device_addr()': \n\tDevice address given is not one of the four valid addresses for the PNI RM3100")
-
 
     """
     assign_xyz_ccr() Assign CCR Values for X, Y, and Z axes
@@ -632,15 +649,21 @@ class PniRm3100:
 
         return signed_int24
 
+    ##################################
+    # Endian Swap Utility Functions
+    ##################################
     """
-    Endian Swap Utility Functions
+    endian_swap_int16()
     """
     def endian_swap_int16(self, input_int16):
         output_int16 = ((input_int16 << 8) & 0xFF00) | \
                         ((input_int16 >> 8) & 0x00FF)
 
         return output_int16
-
+    
+    """
+    endian_swap_int16()
+    """
     def endian_swap_int32(self, input_int32):
         output_int32 = ((input_int32 << 24) & 0xFF000000) | \
                        ((input_int32 << 8)  & 0x00FF0000) | \

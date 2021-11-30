@@ -1,6 +1,5 @@
 import pni_rm3100
 import time
-import smbus2
 
 """
 Writes CCR(Cycle Count Register) values assigned to parameters in 'pni3100_object'
@@ -49,7 +48,7 @@ def read_ccr(i2cbus, pni3100_object):
     read_z_ccr = i2cbus.read_word_data(pni3100_object.device_addr, pni3100_object.CcrRegister.CCR_REGISTER_ADDR + 0x04)
 
     if pni3100_object.print_status_statements:
-        print("read_ccr: (", hex(read_x_ccr), ", ", hex(read_y_ccr), ", ", hex(read_z_ccr), ")", )
+        print("read_ccr: (x: ", hex(read_x_ccr), ", y: ", hex(read_y_ccr), ", z: ", hex(read_z_ccr), ")", )
 
     return read_x_ccr, read_y_ccr, read_z_ccr
 

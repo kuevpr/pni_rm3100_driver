@@ -211,12 +211,13 @@ class PniRm3100:
         scaling = 1.0 / gain                    # [uT / LSB]
         return scaling  
 
+
     """
     default_config() "Default Configuration"
     """
     def default_config(self):
         # Device Address
-        self.device_addr = self.DeviceAddress.I2C_ADDR_LL
+        self.device_addr = self.DeviceAddress.I2C_ADDR_LL  #hex value: 0x20
 
         # Cycle Counter Register (CCR)
         self.x_ccr = self.CcrRegister.CCR_DEFAULT
@@ -632,6 +633,8 @@ class PniRm3100:
 
     """
     Endian Swap Utility Functions
+    These will help reverse the orders of bits in a number so that it can be
+    properly interpretted by the software
     """
     def endian_swap_int16(self, input_int16):
         output_int16 = ((input_int16 << 8) & 0xFF00) | \
