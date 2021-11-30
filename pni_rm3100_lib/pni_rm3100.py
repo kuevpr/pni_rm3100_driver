@@ -715,7 +715,7 @@ class PniRm3100:
         
         return x, y, z
     
-    #TODO: chance i2cbus and pni_obj to self._i2c_bus and self
+    #TODO: chance self._i2c_bus and pni_obj to self._i2c_bus and self
     """
     read_ccr()
     
@@ -723,18 +723,18 @@ class PniRm3100:
     """
     def read_ccr(self):
         # CCRX
-        read_x_ccr = i2cbus.read_word_data(pni3100_object.device_addr, 
-                                           pni3100_object.CcrRegister.CCR_REGISTER_ADDR)
+        read_x_ccr = self._i2c_bus.read_word_data(self.device_addr, 
+                                                  self.CcrRegister.CCR_REGISTER_ADDR)
 
         # CCRY
-        read_y_ccr = i2cbus.read_word_data(pni3100_object.device_addr,
-                                           pni3100_object.CcrRegister.CCR_REGISTER_ADDR + 0x02)
+        read_y_ccr = self._i2c_bus.read_word_data(self.device_addr,
+                                                  self.CcrRegister.CCR_REGISTER_ADDR + 0x02)
 
         # CCRZ
-        read_z_ccr = i2cbus.read_word_data(pni3100_object.device_addr, 
-                                           pni3100_object.CcrRegister.CCR_REGISTER_ADDR + 0x04)
+        read_z_ccr = self._i2c_bus.read_word_data(self.device_addr, 
+                                                  self.CcrRegister.CCR_REGISTER_ADDR + 0x04)
 
-        if pni3100_object.print_status_statements:
+        if self.print_status_statements:
             print("read_ccr: (x: ", hex(read_x_ccr), ", y: ", hex(read_y_ccr), ", z: ", hex(read_z_ccr), ")")
 
         return read_x_ccr, read_y_ccr, read_z_ccr
@@ -747,9 +747,9 @@ class PniRm3100:
     """
     def write_tmrc(self):
         # TMRC
-        write_return_data = i2cbus.write_byte_data(pni3100_object.device_addr,
-                                                   pni3100_object.TmrcRegister.TMRC_REGISTER_ADDR,
-                                                   pni3100_object.tmrc_byte)
+        write_return_data = self._i2c_bus.write_byte_data(self.device_addr,
+                                                          self.TmrcRegister.TMRC_REGISTER_ADDR,
+                                                          self.tmrc_byte)
         return write_return_data
 
     """
@@ -760,9 +760,22 @@ class PniRm3100:
     """
     def write_cmm(self):
         # CMM
-        write_return_data = i2cbus.write_byte_data(pni3100_object.device_addr,
-                                                   pni3100_object.CmmRegister.CMM_REGISTER_ADDR,
-                                                   pni3100_object.cmm_byte)
+        write_return_data = self._i2c_bus.write_byte_data(self.device_addr,
+                                                          self.CmmRegister.CMM_REGISTER_ADDR,
+                                                          self.cmm_byte)
+        return write_return_data
+
+    """
+    write_hshake()
+
+    This function assumes member variables in the object have been 
+    modified to the user's desired values.
+    """
+    def write_hshake(self):
+        # HSHAKE
+        write_return_data = self._i2c_bus.write_byte_data(self.device_addr,
+                                                          self.HshakeRegister.HSHAKE_REGISTER_ADDR,
+                                                          self.hshake_byte)
         return write_return_data
 
 
