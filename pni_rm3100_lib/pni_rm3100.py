@@ -852,8 +852,23 @@ class PniRm3100:
                                                  self.CmmRegister.CMM_REGISTER_ADDR)
         return cmm_value
 
+    """
+    read_hshake
+    """
+    def read_hshake(self):
+        #HSHAKE
+        hshake_value = self._i2c_bus.read_byte_data(self.device_addr,
+                                                    self.HshakeRegister.HSHAKE_REGISTER_ADDR)
+        return hshake_value
 
-
+    """
+    read_revid
+    """
+    def read_revid(self):
+        #REVID
+        revid_value = self._i2c_bus.read_byte_data(self.device_addr,
+                                                   self.RevidRegister.REVID_REGISTER_ADDR)
+        return revid_value
 
 
 
