@@ -715,7 +715,7 @@ class PniRm3100:
     
     Reads CCR(Cycle Count Register) values from the three CCR registers on the device
     """
-    def read_ccr(i2cbus, pni3100_object):
+    def read_ccr(self):
         # CCRX
         read_x_ccr = i2cbus.read_word_data(pni3100_object.device_addr, 
                                            pni3100_object.CcrRegister.CCR_REGISTER_ADDR)
@@ -732,3 +732,13 @@ class PniRm3100:
             print("read_ccr: (x: ", hex(read_x_ccr), ", y: ", hex(read_y_ccr), ", z: ", hex(read_z_ccr), ")")
 
         return read_x_ccr, read_y_ccr, read_z_ccr
+
+    """
+    write_tmrc() 
+    """
+    def write_tmrc(self):
+        # TMRC
+        write_return_data = i2cbus.write_byte_data(pni3100_object.device_addr,
+                                                   pni3100_object.TmrcRegister.TMRC_REGISTER_ADDR,
+                                                   pni3100_object.tmrc_byte)
+        return write_return_data
