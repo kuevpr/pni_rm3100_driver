@@ -751,3 +751,19 @@ class PniRm3100:
                                                    pni3100_object.TmrcRegister.TMRC_REGISTER_ADDR,
                                                    pni3100_object.tmrc_byte)
         return write_return_data
+
+    """
+    write_cmm()
+
+    This function assumes member variables in the object have been 
+    modified to the user's desired values.
+    """
+    def write_cmm(self):
+        # CMM
+        write_return_data = i2cbus.write_byte_data(pni3100_object.device_addr,
+                                                   pni3100_object.CmmRegister.CMM_REGISTER_ADDR,
+                                                   pni3100_object.cmm_byte)
+        return write_return_data
+
+
+
