@@ -806,9 +806,6 @@ class PniRm3100:
 
     """
     read_status()
-
-    This function assumes member variables in the object have been 
-    modified to the user's desired values.
     """
     def read_status(self):
         #STATUS (which is really just reading the DRDY bit)
@@ -818,6 +815,55 @@ class PniRm3100:
         data_is_ready = bool(status_val & self.StatusRegister.STATUS_DRDY)
 
         return data_is_ready
+
+    """
+    read_bist()
+    """
+    def read_bist(self):
+        #BIST
+        bist_value = self._i2c_bus.read_byte_data(self.device_addr,
+                                                  self.BistRegister.BIST_REGISTER_ADDR)
+        return bist_value
+
+    """
+    read_poll()
+    """
+    def read_poll(self):
+        #POLL
+        poll_value = self._i2c_bus.read_byte_data(self.device_addr,
+                                                  self.PollRegister.POLL_REGISTER_ADDR)
+        return poll_value
+
+    """
+    read_tmrc()
+    """
+    def read_tmrc(self):
+        #TMRC
+        tmrc_value = self._i2c_bus.read_byte_data(self.device_addr,
+                                                  self.TmrcRegister.TMRC_REGISTER_ADDR)
+        return tmrc_value
+
+    """
+    read_cmm
+    """
+    def read_cmm(self):
+        #CMM
+        cmm_value = self._i2c_bus.read_byte_data(self.device_addr,
+                                                 self.CmmRegister.CMM_REGISTER_ADDR)
+        return cmm_value
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     """
     read_meas_x() reads X-axis magnetometer and returns the valuein microtesla (uT)
@@ -951,5 +997,5 @@ class PniRm3100:
             if self.print_status_statements or self.print_debug_statements:
                 print("read_meas()")
                 # if debug mode is on, all the lower level read_meas_<>() funcs will print
-                
+
             return [x_mag_value, y_mag_value, z_mag_value]
