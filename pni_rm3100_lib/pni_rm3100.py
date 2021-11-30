@@ -9,6 +9,12 @@ class PniRm3100:
     ##################################################
     ##########      MEMBER VARIABLES        ##########
     ##################################################
+
+    #TODO: make variables private via a leading underscore to make more official
+    # The below set of variables may be:
+    #   - configured in the object via 'assign_<>' functions
+    #   - written to the device via 'write_<>' functions (see SMBus functions)
+    #   - read from the device via 'read_<>' functions (see SMBus functions)
     device_addr = None  # Address of the RM3100
     x_ccr = None        # X axis Cycle Count Register
     y_ccr = None        # Y axis Cycle Count Register
@@ -681,7 +687,7 @@ class PniRm3100:
     
     Writes CCR(Cycle Count Register) values assigned to parameters in self
     
-    This function assumes member variables in the pni3100_object have been 
+    This function assumes member variables in the object have been 
     modified to the user's desired values.
     """
     def write_ccr(self):
@@ -735,6 +741,9 @@ class PniRm3100:
 
     """
     write_tmrc() 
+
+    This function assumes member variables in the object have been 
+    modified to the user's desired values.
     """
     def write_tmrc(self):
         # TMRC
