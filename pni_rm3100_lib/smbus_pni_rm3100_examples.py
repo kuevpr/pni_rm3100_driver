@@ -1,7 +1,5 @@
 import pni_rm3100
 import time
-import smbus_pni_rm3100
-import smbus2 as smbus
 
 """
 execute_self_test

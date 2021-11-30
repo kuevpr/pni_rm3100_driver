@@ -1,3 +1,10 @@
+###############################################################################
+#Authors: Prince Kuevor, Justin Schachter
+#Purpose: This class serves as a hardware-level driver for the PNI Corp. RM3100
+#         geomagnetic sensor. It currently only supports I2C (SMBus)
+#         communications, but may be extended in the future to support SPI.  
+###############################################################################
+
 import time
 from enum import IntEnum
 import smbus2 as smbus
@@ -896,15 +903,6 @@ class PniRm3100:
         # This will start Continuous Measurement Mode if CMM_START bit is set
         self.write_cmm()
 
-
-
-
-
-
-
-
-
-
     """
     read_meas_x() reads X-axis magnetometer and returns the valuein microtesla (uT)
     """
@@ -1039,3 +1037,51 @@ class PniRm3100:
                 # if debug mode is on, all the lower level read_meas_<>() funcs will print
 
             return [x_mag_value, y_mag_value, z_mag_value]
+
+    """
+    self_test()
+    """
+    def self_test(self, attempt_num=10):
+        # Make sure CMM (Continuous Measurement Mode) is Disabled
+        self.assign_cmm_byte(cmx=False, cmy=False, cmz=False, drdm=False, cmm_start=False)
+        self.write_cmm()
+
+        # Write to BIST (Built-In Self Test) Registers with desired settings 
+        # It's assumed BIST bits are set to desired values
+        self.write_bist()
+
+        # Write to POLL to initiate Self Test 
+        # It's assumed POLL bits are set to desired values
+        self.write_poll()
+
+        # Read DRDY bit until it is HIGH
+        i = 0
+        while ((not self.read_status()) and (i < attempt_num)):
+            i += 1
+            time.sleep(1) # Wait 1 second between each check of status bit
+
+        if i == attempt_num:
+            if self.print_status_statements:
+                print("ERROR in 'self_test()': \n\tDRDY bit was not detected as HIGH")
+            return None
+
+        # Read XOK, YOK, and ZOK bits from BIST register
+        bist_value = self.read_bist()
+
+        if self.print_status_statements:
+            print('self_test(i2c_addr={}) results:'.format(hex(self.device_addr)))
+            if bist_value & self.BistRegister.BIST_XOK:
+                print("\tX Magnetometer: OK")
+            else:
+                print("\tX Magnetometer: NOT OK")
+            if bist_value & self.BistRegister.BIST_YOK:
+                print("\tY Magnetometer: OK")
+            else:
+                print("\tY Magnetometer: NOT OK")
+            if bist_value & self.BistRegister.BIST_ZOK:
+                print("\tZ Magnetometer: OK")
+            else:
+                print("\tZ Magnetometer: NOT OK")
+
+        return bist_value
+    
