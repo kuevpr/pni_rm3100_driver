@@ -844,7 +844,7 @@ class PniRm3100:
         return tmrc_value
 
     """
-    read_cmm
+    read_cmm()
     """
     def read_cmm(self):
         #CMM
@@ -853,7 +853,7 @@ class PniRm3100:
         return cmm_value
 
     """
-    read_hshake
+    read_hshake()
     """
     def read_hshake(self):
         #HSHAKE
@@ -862,7 +862,7 @@ class PniRm3100:
         return hshake_value
 
     """
-    read_revid
+    read_revid()
     """
     def read_revid(self):
         #REVID
@@ -870,6 +870,31 @@ class PniRm3100:
                                                    self.RevidRegister.REVID_REGISTER_ADDR)
         return revid_value
 
+    """
+    write_config()
+    Writes the configuration parameters of the object to the i2c bus
+    
+    This function assumes member variables in the object have been 
+    modified to the user's desired values.
+    """
+    def write_config(self):
+        # write to bist register
+        self.write_bist()
+
+        # write to poll register
+        self.write_poll()
+
+        # write to ccr register
+        self.write_ccr()
+
+        # write to tmrc register
+        self.write_tmrc()
+
+        # write to hshake register
+        self.write_hshake()
+        
+        # This will start Continuous Measurement Mode if CMM_START bit is set
+        self.write_cmm()
 
 
 
