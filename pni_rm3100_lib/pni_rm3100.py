@@ -778,5 +778,44 @@ class PniRm3100:
                                                           self.hshake_byte)
         return write_return_data
 
+    """
+    write_poll()
 
+    This function assumes member variables in the object have been 
+    modified to the user's desired values.
+    """
+    def write_poll(self):
+        # POLL
+        write_return = self._i2c_bus.write_byte_data(self.device_addr,
+                                                     self.PollRegister.POLL_REGISTER_ADDR,
+                                                     self.poll_byte)
+        return write_return
+
+    """
+    write_bist()
+
+    This function assumes member variables in the object have been 
+    modified to the user's desired values.
+    """
+    def write_bist(self):
+        # BIST
+        write_return = self._i2c_bus.write_byte_data(self.device_addr,
+                                                     self.BistRegister.BIST_REGISTER_ADDR,
+                                                     self.bist_byte)
+        return write_return
+
+    """
+    read_status()
+
+    This function assumes member variables in the object have been 
+    modified to the user's desired values.
+    """
+    def read_status(self):
+        #STATUS (which is really just reading the DRDY bit)
+        status_val = self._i2c_bus.read_byte_data(self.device_addr,
+                                                  self.StatusRegister.STATUS_REGISTER_ADDR)
+
+        data_is_ready = bool(status_val & self.StatusRegister.STATUS_DRDY)
+
+        return data_is_ready
 
