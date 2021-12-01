@@ -1,12 +1,22 @@
-from setuptools import find_packages, setup
+from setuptools import setup
 
 setup(
-    name='pni_rm3100_lib',
-    packages=find_packages(include=['pni_rm3100_lib']),
-    version='0.0.1',
-    description='A Python library to configure and interface with the PNI RM3100 geomagnetic sensor over I2C via smbus2',
-    author='Price Kuevor, Justin Schachter',
+    name='pni_rm3100',
+    version='0.1.0',    
+    description='I2C Driver for the PNI Corp. RM3100 Geomagnetic Sensor',
+    url='https://github.com/kuevpr/pni_rm3100_driver/',
+    author='Prince Kuevor and Justin Schachter',
+    author_email='kuevpr@umich.edu',
     license='MIT',
-    install_requires=[],
-    setup_requires=['smbus2'],
+    packages=['pyexample'],
+    install_requires=['smbus2',                     
+    ],
+
+    classifiers=[
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: Science/Research',
+        'License :: OSI Approved :: MIT License',  
+        'Operating System :: POSIX :: Linux',
+        'Programming Language :: Python :: 3',
+    ],
 )
