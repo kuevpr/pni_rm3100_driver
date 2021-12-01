@@ -140,12 +140,13 @@ def execute_continuous_measurements_with_assigned_settings(moving_avg_window = 1
     y_mag_avg = y_mag_sum / moving_avg_window
     z_mag_avg = z_mag_sum / moving_avg_window
     total_mag_avg = math.sqrt(pow(x_mag_avg,2) + pow(y_mag_avg,2) + pow(z_mag_avg,2))
-    print("\nAverage magnetic field values over {moving_avg_window} iterations are:")
-    print("\tmag_avg_x [uT]: {x_mag_avg}")
-    print("\tmag_avg_x [uT]: {x_mag_avg}")
-    print("\tmag_avg_x [uT]: {x_mag_avg}\n--------------------------------")
-    print("\tmag_field magnitude [uT]: {total_mag_avg}")
-
+    print(f"\nAverage magnetic field values over {moving_avg_window} iterations are:")
+    print(f"\tmag_avg_x [uT]: {x_mag_avg}")
+    print(f"\tmag_avg_x [uT]: {x_mag_avg}")
+    print(f"\tmag_avg_x [uT]: {x_mag_avg}")
+    print("--------------------------------")
+    print(f"\tmag_field magnitude [uT]: {total_mag_avg}")
+    
 ###############################################################################
 """
 execute_continuous_measurements_with_default_config()
@@ -196,11 +197,12 @@ def execute_continuous_measurements_with_default_config(moving_avg_window = 10, 
     y_mag_avg = y_mag_sum / moving_avg_window
     z_mag_avg = z_mag_sum / moving_avg_window
     total_mag_avg = math.sqrt(pow(x_mag_avg,2) + pow(y_mag_avg,2) + pow(z_mag_avg,2))
-    print("\nAverage magnetic field values over {moving_avg_window} iterations are:")
-    print("\tmag_avg_x [uT]: {x_mag_avg}")
-    print("\tmag_avg_x [uT]: {x_mag_avg}")
-    print("\tmag_avg_x [uT]: {x_mag_avg}\n--------------------------------")
-    print("\tmag_field magnitude [uT]: {total_mag_avg}")
+    print(f"\nAverage magnetic field values over {moving_avg_window} iterations are:")
+    print(f"\tmag_avg_x [uT]: {x_mag_avg}")
+    print(f"\tmag_avg_x [uT]: {x_mag_avg}")
+    print(f"\tmag_avg_x [uT]: {x_mag_avg}")
+    print("--------------------------------")
+    print(f"\tmag_field magnitude [uT]: {total_mag_avg}")
 
 # This is the code that will execute when you type "python3 smbus_pni_rm3100_examples" in the terminal
 # Please only un-comment one of these at a time.
