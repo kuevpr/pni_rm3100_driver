@@ -1,5 +1,7 @@
-import pni_rm3100
+import math
 import time
+
+import pni_rm3100
 ###############################################################################
 ###Setup: 
 ## Instantiate Objects
@@ -137,6 +139,7 @@ def execute_continuous_measurements_with_assigned_settings(moving_avg_window = 1
     x_mag_avg = x_mag_sum / moving_avg_window
     y_mag_avg = y_mag_sum / moving_avg_window
     z_mag_avg = z_mag_sum / moving_avg_window
+    total_mag = math.sqrt(pow(x_mag_avg,2) + pow(y_mag_avg,2) + pow(z_mag_avg,2))
     print("\nAverage magnetic field values over {} iterations are \n\txMag_avg: {:+.4f}uT \tyMag_avg: {:+.4f}uT \tzMag_avg {:+.4f}uT"\
           .format(moving_avg_window, x_mag_avg, y_mag_avg, z_mag_avg))
 
