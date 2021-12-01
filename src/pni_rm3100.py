@@ -811,7 +811,8 @@ class PniRm3100:
         # BIST
         write_return = self._i2c_bus.write_byte_data(self.device_addr,
                                                      self.BistRegister.BIST_REGISTER_ADDR,
-                                                     self.bist_byte)
+                                                     self.bist_byte,
+                                                     force=True)
         return write_return
 
     """
