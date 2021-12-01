@@ -8,7 +8,6 @@ setup(
     author='Prince Kuevor and Justin Schachter',
     author_email='kuevpr@umich.edu',
     license='MIT',
-    packages=['pyexample'],
     install_requires=['smbus2',                     
     ],
 
@@ -19,4 +18,8 @@ setup(
         'Operating System :: POSIX :: Linux',
         'Programming Language :: Python :: 3',
     ],
+    
+    package_dir={"": "src"},
+    packages=setuptools.find_packages(where="src"),
+    python_requires=">=3.6",
 )
