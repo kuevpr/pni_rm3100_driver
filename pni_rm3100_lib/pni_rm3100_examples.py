@@ -114,11 +114,11 @@ def execute_continuous_measurements_with_assigned_settings(moving_avg_window = 1
     pni_rm3100_device.write_config()
 
     # Now that we've enabled CMM (Continous Measurement Mode), let's read some magnetometer values!
-    print("Reading measurements:")
+    print("Reading measurements: [starting measurement loop]")
     x_mag_sum = y_mag_sum = z_mag_sum = 0
     for i in range(moving_avg_window):
         # Print measurement loop progress
-        print("\t{} of {} in moving avg window".format(i, moving_avg_window))
+        print("\n\n\t{} of {} in moving avg window".format(i, moving_avg_window))
 
         #Read magnetic field data (microtesla/uT output)
         magnetometer_readings = pni_rm3100_device.read_meas()
@@ -171,11 +171,11 @@ def execute_continuous_measurements_with_default_config(moving_avg_window = 10, 
     pni_rm3100_device.assign_device_addr(device_address)
 
     # Now that we've enabled CMM (Continous Measurement Mode), let's read some magnetometer values!
-    print("Reading measurements:")
+    print("Reading measurements: [starting measurement loop]")
     x_mag_sum = y_mag_sum = z_mag_sum = 0
     for i in range(moving_avg_window):
         # Print measurement loop progress
-        print("\t{} of {} in moving avg window".format(i, moving_avg_window))
+        print("\n\n\t{} of {} in moving avg window".format(i, moving_avg_window))
 
         #Read magnetic field data (microtesla/uT output)
         magnetometer_readings = pni_rm3100_device.read_meas()
