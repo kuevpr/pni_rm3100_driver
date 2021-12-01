@@ -1023,20 +1023,20 @@ class PniRm3100:
 
         return z_mag_value
 
-        """
-        read_meas() reads X-,Y-,Z-axis magnetometers and returns a list of the values in microtesla (uT) [x,y,z]
-        """
-        def read_meas(self):
-            x_mag_value = self.read_meas_x()
-            y_mag_value = self.read_meas_y()
-            z_mag_value = self.read_meas_z()
-            
-            # Print the Measurements
-            if self.print_status_statements or self.print_debug_statements:
-                print("read_meas()")
-                # if debug mode is on, all the lower level read_meas_<>() funcs will print
+    """
+    read_meas() reads X-,Y-,Z-axis magnetometers and returns a list of the values in microtesla (uT) [x,y,z]
+    """
+    def read_meas(self):
+        x_mag_value = self.read_meas_x()
+        y_mag_value = self.read_meas_y()
+        z_mag_value = self.read_meas_z()
+        
+        # Print the Measurements
+        if self.print_status_statements or self.print_debug_statements:
+            print("read_meas()")
+            # if debug mode is on, all the lower level read_meas_<>() funcs will print
 
-            return [x_mag_value, y_mag_value, z_mag_value]
+        return [x_mag_value, y_mag_value, z_mag_value]
 
     """
     self_test()
