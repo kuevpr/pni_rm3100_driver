@@ -281,8 +281,9 @@ class PniRm3100:
         drc0_bit = self.HshakeRegister.HSHAKE_DRC0 # Default: clear DRDY when reading any Measurement Result
         self.hshake_byte = drc1_bit | drc0_bit
 
-        # Write this configuration to the device
-        self.write_config()
+        #TODO: THERE ARE ISSUES WITH THIS SINCE default_addr selects 0x20 and if you are not using a 0x20 device it causes the lib to not work
+        # # Write this configuration to the device
+        # self.write_config()
 
     """
     change_i2c_bus() 
