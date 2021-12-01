@@ -1,7 +1,12 @@
 import pni_rm3100
 import time
 ###############################################################################
-# Set PNI Device Address (using PniRm3100() sub-classes), uncomment one of the below lines:
+###Setup: 
+## Instantiate Objects
+pni_rm3100_device = pni_rm3100.PniRm3100()
+
+## Choose (not assigning yet) a PNI Device Address (using PniRm3100() sub-classes), 
+## uncomment one of the below lines:
 # device_address = pni_rm3100_device.DeviceAddress.I2C_ADDR_LL #0x20
 # device_address = pni_rm3100_device.DeviceAddress.I2C_ADDR_HL #0x21
 # device_address = pni_rm3100_device.DeviceAddress.I2C_ADDR_LH #0x22
@@ -14,9 +19,6 @@ execute_self_test
     status of the three magnetic field sensors.
 """
 def execute_self_test():
-    # Instantiate Objects
-    pni_rm3100_device = pni_rm3100.PniRm3100()
-
     # Set Print Settings
     pni_rm3100_device.print_status_statements = True
     pni_rm3100_device.print_debug_statements = True
@@ -49,9 +51,6 @@ execute_continuous_measurements_with_assigned_settings()
     These functions take in a "pni_rm3100_device" that has been configued to the user's preferences
 """
 def execute_continuous_measurements_with_assigned_settings(moving_avg_window = 10, dt_seconds = 0.1):
-    # Instantiate Objects
-    pni_rm3100_device = pni_rm3100.PniRm3100()
-
     # Select PNI Object Settings
     # Set this to False (the default) if you don't want the "read" functions printing data in the terminal
     pni_rm3100_device.print_status_statements = True
