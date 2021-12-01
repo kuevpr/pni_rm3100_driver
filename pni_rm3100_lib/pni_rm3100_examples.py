@@ -12,7 +12,13 @@ pni_rm3100_device = pni_rm3100.PniRm3100()
 # device_address = pni_rm3100_device.DeviceAddress.I2C_ADDR_LH #0x22
 device_address = pni_rm3100_device.DeviceAddress.I2C_ADDR_HH #0x23
 
+## Choose which test case/option you would like to run:
+## uncomment one of the below lines:
+# test_execution = 1 #execute_self_test()
+test_execution = 2 #execute_continuous_measurements_with_assigned_settings()
+# test_execution = 3 #execute_continuous_measurements_with_default_config
 ###############################################################################
+
 """
 execute_self_test
     Example of running a BIST (Built In Selt Test) to check the 
@@ -189,8 +195,11 @@ def execute_continuous_measurements_with_default_config(moving_avg_window = 10, 
 # This is the code that will execute when you type "python3 smbus_pni_rm3100_examples" in the terminal
 # Please only un-comment one of these at a time.
 if __name__=="__main__":
-    # execute_continuous_measurements_with_assigned_settings()   # Read data form RM3100 in continuous mode
-    # execute_continuous_measurements_with_default_config()      # Read data form RM3100 in continuous mode
-    execute_self_test()                                        # Perform a BIST (built-in self test) on the RM3100
-    
-
+    if test_execution == 1:
+        execute_self_test()                                      # Perform a BIST (built-in self test) on the RM3100
+    elif test_execution == 2:
+        execute_continuous_measurements_with_assigned_settings() # Read data form RM3100 in continuous mode
+    elif test_execution == 3:
+        execute_continuous_measurements_with_default_config()    # Read data form RM3100 in continuous mode
+    else:
+        print("UNDEFINED TEST CASE SELECTED")
