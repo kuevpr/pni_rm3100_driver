@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='pni_rm3100',
-    version='0.1.0',    
+    version='0.1.1',    
     description='I2C Driver for the PNI Corp. RM3100 Geomagnetic Sensor',
     url='https://github.com/kuevpr/pni_rm3100_driver/',
     author='Prince Kuevor and Justin Schachter',
