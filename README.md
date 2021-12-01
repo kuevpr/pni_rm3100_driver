@@ -5,7 +5,7 @@ Code to configure and read data from a PNI RM3100 Magnetometer via a convenient 
 Run: 
 
 ```
-pip3 install git+https://github.com/kuevpr/pni_rm3100_driver.git@jschach_edits
+pip3 install git+https://github.com/kuevpr/pni_rm3100_driver.git@jschach_edits_updated_install_instructions
 ```
 
 # File Structure
