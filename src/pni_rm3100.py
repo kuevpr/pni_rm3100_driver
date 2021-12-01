@@ -281,6 +281,9 @@ class PniRm3100:
         drc0_bit = self.HshakeRegister.HSHAKE_DRC0 # Default: clear DRDY when reading any Measurement Result
         self.hshake_byte = drc1_bit | drc0_bit
 
+        # Write this configuration to the device
+        self.write_config()
+
     """
     change_i2c_bus() 
         Input: 
