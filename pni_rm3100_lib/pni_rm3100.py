@@ -938,8 +938,8 @@ class PniRm3100:
         if self.print_debug_statements:
             print("\tread_meas_x()")
             print("\t\tX bytes: [{}]".format(', '.join(hex(val) for val in x_mag_bytes)), 
-                  "\t\tX Int Unsigned: ", hex(x_mag_unsigned), ", ", x_mag_unsigned, 
-                  "\t\tX Int: ", x_mag_int, "\tX Value: ", x_mag_value)
+                  "\n\t\tX Int Unsigned: ", hex(x_mag_unsigned), ", ", x_mag_unsigned, 
+                  "\n\t\tX Int: ", x_mag_int, "\tX Value: ", x_mag_value)
 
         return x_mag_value
 
@@ -978,8 +978,8 @@ class PniRm3100:
         if self.print_debug_statements:
             print("\tread_meas_y()")
             print("\t\tY bytes: [{}]".format(', '.join(hex(val) for val in y_mag_bytes)), 
-                  "\t\tY Int Unsigned: ", hex(y_mag_unsigned), ", ", y_mag_unsigned, 
-                  "\t\tY Int: ", y_mag_int, "\tY Value: ", y_mag_value)
+                  "\n\t\tY Int Unsigned: ", hex(y_mag_unsigned), ", ", y_mag_unsigned, 
+                  "\n\t\tY Int: ", y_mag_int, "\tY Value: ", y_mag_value)
 
         return y_mag_value
 
@@ -1018,8 +1018,8 @@ class PniRm3100:
         if self.print_debug_statements:
             print("\tread_meas_z()")
             print("\t\tZ bytes: [{}]".format(', '.join(hex(val) for val in z_mag_bytes)), 
-                  "\t\tZ Int Unsigned: ", hex(z_mag_unsigned), ", ", z_mag_unsigned, 
-                  "\t\tZ Int: ", z_mag_int, "\tZ Value: ", z_mag_value)
+                  "\n\t\tZ Int Unsigned: ", hex(z_mag_unsigned), ", ", z_mag_unsigned, 
+                  "\n\t\tZ Int: ", z_mag_int, "\tZ Value: ", z_mag_value)
 
         return z_mag_value
 
