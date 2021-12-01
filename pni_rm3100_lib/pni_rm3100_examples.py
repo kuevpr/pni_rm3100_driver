@@ -142,9 +142,9 @@ def execute_continuous_measurements_with_assigned_settings(moving_avg_window = 1
     total_mag_avg = math.sqrt(pow(x_mag_avg,2) + pow(y_mag_avg,2) + pow(z_mag_avg,2))
     print(f"\nAverage magnetic field values over {moving_avg_window} iterations are:")
     print(f"\tmag_avg_x [uT]: {x_mag_avg}")
-    print(f"\tmag_avg_x [uT]: {x_mag_avg}")
-    print(f"\tmag_avg_x [uT]: {x_mag_avg}")
-    print("--------------------------------")
+    print(f"\tmag_avg_y [uT]: {y_mag_avg}")
+    print(f"\tmag_avg_z [uT]: {z_mag_avg}")
+    print("\t--------------------------------")
     print(f"\tmag_field magnitude [uT]: {total_mag_avg}")
     
 ###############################################################################
@@ -199,9 +199,9 @@ def execute_continuous_measurements_with_default_config(moving_avg_window = 10, 
     total_mag_avg = math.sqrt(pow(x_mag_avg,2) + pow(y_mag_avg,2) + pow(z_mag_avg,2))
     print(f"\nAverage magnetic field values over {moving_avg_window} iterations are:")
     print(f"\tmag_avg_x [uT]: {x_mag_avg}")
-    print(f"\tmag_avg_x [uT]: {x_mag_avg}")
-    print(f"\tmag_avg_x [uT]: {x_mag_avg}")
-    print("--------------------------------")
+    print(f"\tmag_avg_y [uT]: {y_mag_avg}")
+    print(f"\tmag_avg_z [uT]: {z_mag_avg}")
+    print("\t--------------------------------")
     print(f"\tmag_field magnitude [uT]: {total_mag_avg}")
 
 # This is the code that will execute when you type "python3 smbus_pni_rm3100_examples" in the terminal
