@@ -86,9 +86,9 @@ def execute_continuous_measurements_with_assigned_settings(moving_avg_window = 1
     # Note: 'smbus_pni_rm3100.write_config' will write to the CCR address for you.
     print("---- About to write to and read from CCR Registers ----\n")
     #write CCR: 
-    pni_rm3100_device.write_ccr(i2cbus, pni_rm3100_device)
+    pni_rm3100_device.write_ccr()
     #read CCR:
-    read_x_ccr, read_y_ccr, read_z_ccr = pni_rm3100_device.read_ccr(i2cbus, pni_rm3100_device)
+    read_x_ccr, read_y_ccr, read_z_ccr = pni_rm3100_device.read_ccr()
 
     # Here's an example on how to check some of the values internal to the 'pni_rm3100_device' object
     # A complete list of the member variables appear at the start of the "PniRm3100" class defiend in "pni_rm3100.py"
